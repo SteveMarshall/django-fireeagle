@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h1>Hey {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}!</h1>
+<p>Why don’t you <a href="{% url django_fireeagle.views.begin %}">authorise Fire Eagle</a>?</p>
+{% endblock %}

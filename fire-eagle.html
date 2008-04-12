@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en-gb">
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <title>Fire Eagle in Django</title>
+    </head>
+    <body>
+        <h1>Fire Eagle in Django</h1>
+        <p>The <code>django_fireeagle</code> package contains code to handle the Fire Eagle authorisation process within Django. You can use it to manage connections between Django users and their respective Fire Eagle access tokens.</p>
+        
+        <h2>Overview</h2>
+        <p>The Django Fire Eagle package consists of:</p>
+        <ul>
+            <li>Views to handle instigation and completion of Fire Eagle authorisation.</li>
+            <li>A database model to persist Fire Eagle access tokens.</li>
+        </ul>
+        
+        <h2>Dependencies</h2>
+        <p><code>django_fireeagle</code> uses the Python <a href="http://oauth.googlecode.com/svn/code/python/oauth/">OAuth</a> and <a href="http://github.com/SteveMarshall/fire-eagle-python-binding/">fireeagle_api</a> libraries, which must be installed somewhere on the Python path.</p>
+        <p>The package also depends on the availability of Django&#8217;s <a href="http://www.djangoproject.com/documentation/sessions/">session support</a>.</p>
+        
+        <h2>Installation</h2>
+        <p>Having ensured the <code>oauth</code>, <code>fireeagle_api</code>, and <code>django_fireeagle</code> packages are available on your Python path, you can add Fire Eagle interaction to your application by doing the following:</p>
+        <ol>
+            <li><p>Put <kbd>django_fireeagle</kbd> in your <code>INSTALLED_APPS</code> setting.</p></li>
+            <li><p>Run the command <kbd>manage.py syncdb</kbd> to create the necessary tables.</p></li>
+            <li>
+                <p>Add the following views to your urlconf:</p>
+                <pre>
+    ( r'fire-eagle/$', 'django_fireeagle.views.begin' ),
+    ( r'fire-eagle/finalise/$', 'django_fireeagle.views.finalise' ),
+                </pre>
+            </li>
+            <li>Set the callback URL in Fire Eagle to point to <kbd>yoursite.com/fire-eagle/finalise/</kbd>.</li>
+        </ol>
+        <p>You will then be able to browse to <kbd>yoursite.com/fire-eagle/</kbd> to associate your logged-in Django user to a Fire Eagle account</p>
+        
+        <h2>Accessing Fire Eagle</h2>
+        <p>To interact with Fire Eagle on behalf of the current user:</p>
+        <pre>
+    // Retrieve the current user's Fire Eagle OAuth token
+    fe_user = FireEagleUser.objects.get( user=request.user )
+    request_token = fe_user.get_fire_eagle_token()
+
+    // Instantiate a Fire Eagle instance using our app's token
+    fe = FireEagle(
+        getattr( settings, 'FIREEAGLE_CONSUMER_KEY' ),
+        getattr( settings, 'FIREEAGLE_CONSUMER_SECRET' )
+    )
+
+    // Make calls to the Fire Eagle API!
+    fe_user = fe.user( request_token )
+        </pre>
+        
+        <h2>Example project</h2>
+        <p>To use the included example:</p>
+        <ol>
+            <li><p>Create a test application on Fire Eagle, with the callback URL pointing to <kbd>http://127.0.0.1:8000/fire-eagle/finalise/</kbd>.</p></li>
+            <li><p>Fill the <code>FIREEAGLE_CONSUMER_KEY</code> and <code>FIREEAGLE_CONSUMER_SECRET</code> in <code>settings.py</code> with the values for your Fire Eagle application.</p></li>
+            <li><p>Run <kbd>python manage.py syncdb</kbd> in the project’s directory, and create a user.</p></li>
+            <li><p>Run <kbd>python manage.py runserver</kbd> to start the app.</p></li>
+            <li><p>Navigate to <kbd>http://127.0.0.1:8000/</kbd>, and follow the steps.</p></li>
+        </ol>
+    </body>
+</html>

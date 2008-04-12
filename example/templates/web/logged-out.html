@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h1>Not logged in yet</h1>
+<p>Hey, why don’t you <a href="{% url django.contrib.auth.views.login %}?next=/?done">log in</a>?</p>
+{% endblock %}

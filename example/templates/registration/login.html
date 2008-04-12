@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h1>Log in</h1>
+<form method="post" action=".?next=/">
+
+    <p{% if form.username.form.username.required %} class="required"{% endif %}>
+        <label for="{{ form.username.auto_id }}">
+            <span class="label">Username: </span>
+            {{ form.username }}{% if form.username.form.username.required %}
+            <em><abbr title="Required">*</abbr></em>{% endif %}{% if form.username.errors %}
+            <em class="error">{{ form.username.errors|join:", " }}</em>{% endif %}
+        </label>
+    </p>
+    <p{% if form.password.form.password.required %} class="required"{% endif %}>
+        <label for="{{ form.password.auto_id }}">
+            <span class="label">Password: </span>
+            {{ form.password }}{% if form.password.form.password.required %}
+            <em><abbr title="Required">*</abbr></em>{% endif %}{% if form.password.errors %}
+            <em class="error">{{ form.password.errors|join:", " }}</em>{% endif %}
+        </label>
+    </p>
+    
+</table>
+{% endblock %}

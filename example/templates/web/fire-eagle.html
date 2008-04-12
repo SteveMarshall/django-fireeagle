@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h1>Hey {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}!</h1>
+<p>It looks like you’re at {{ fe_user.0.location.0.name }}!</p>
+{% endblock %}
