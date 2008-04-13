@@ -9,10 +9,10 @@ from django_fireeagle.models import FireEagleUser
 
 @login_required
 def begin( request ):
-    """Start the Fireball authorisation process"""
+    """Start the Fire Eagle authorisation process"""
     # Store next param to use after finalise()
     if 'next' in request.GET.keys():
-        request.session['fireball_auth_next'] = request.GET['next']
+        request.session['fireeagle_auth_next'] = request.GET['next']
     
     fe = FireEagle(
         getattr( settings, 'FIREEAGLE_CONSUMER_KEY' ),
@@ -36,15 +36,15 @@ def begin( request ):
 
 @login_required
 def finalise( request, next_url='/' ):
-    """Finalise the Fireball authorisation process"""
+    """Finalise the Fire Eagle authorisation process"""
     fe = FireEagle(
         getattr( settings, 'FIREEAGLE_CONSUMER_KEY' ),
         getattr( settings, 'FIREEAGLE_CONSUMER_SECRET' )
     )
     
-    if 'fireball_auth_next' in request.session.keys():
-        next_url = request.session['fireball_auth_next']
-        del request.session['fireball_auth_next']
+    if 'fireeagle_auth_next' in request.session.keys():
+        next_url = request.session['fireeagle_auth_next']
+        del request.session['fireeagle_auth_next']
     
     # TODO: Raise exception when we don't get an oauth_token in the request
     
